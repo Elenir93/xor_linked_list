@@ -28,3 +28,10 @@ The sentinel address is `0`: XOR-ing against `0` leaves the other address unchan
 `Node` objects are tied to the `XorLinkedList` that created them. Passing a node from one list into another list's `remove` raises `KeyError`, as does calling `remove` on a node you have already removed. The list does not validate that a `Node` you hand to `remove` came from *this* list via its type — it checks the node's address against its own registry.
 
 `len(lst)` and `list(lst)` both walk the list, so they are O(n), not O(1). There is no caching of the length.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
